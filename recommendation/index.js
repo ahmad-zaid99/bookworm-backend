@@ -12,9 +12,9 @@ AWS.config.region = awsConfigs.region;
 exports.handler = async (event) => {
     const table = awsConfigs.tableName;
 
-    let all_books = fetch(DynamoDBClient,table);
+    let all_books = JSON.parse(fetch(DynamoDBClient,table));
 
-    const users = event.body.users ;
+    const users = JSON.parse(event.body.users) ;
 
     users.map( user => {
 
@@ -22,17 +22,14 @@ exports.handler = async (event) => {
         let books = filter(all_books,user.location,user.distance,user.userId);
 
         // add ratings - complete
-        books = distanceScore(books,user.distance);
+        books = distanceScore(books,user.userDistance);
         books = tagScore(books,user.tags.length);
 
         // sort according to scores
 
         books = sortByScore(books);
         
-        return books;
-
-    
-
+        return JSON.stringify(books);
 
     });
 }
