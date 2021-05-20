@@ -1,6 +1,7 @@
 const awsResourceConfigs = {
     region : "ap-south-1",
-    tableName : "user-details"
-}
+    tableName : "book-details",
+    documentStorageBucketname : "bookworm01"
+};
 
 module.exports = awsResourceConfigs;

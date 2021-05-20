@@ -1,3 +1,4 @@
+const getLikedBooks = require('./get-liked-books');
 
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
     var R = 6371; // Radius of the earth in km
@@ -14,25 +15,40 @@ function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
 }
   
 function deg2rad(deg) {
-    return deg * (Math.PI/180)
+    return deg * (Math.PI/180) ;
 }
 
-const handler = async(books,userLoc,userDistance,userId) =>{
+const handler = async(all_books,userLat,userLong,userDistance,userId,userTags) =>{
     
-    return books.filter( function(book){
-        var location = book.location;
-        var dist = getDistanceFromLatLonInKm(userLoc.lat,userLoc.lng,location.lat,location.lng);
+        let books = all_books ;
+        
+        let liked_books = await getLikedBooks(userId);
+    
+     return [].slice.call(books).filter( function(book){
+        
+        if(liked_books!=null && liked_books.includes(book)){
+            return false;
+        }
+        
+        var dist = getDistanceFromLatLonInKm(userLat,userLong,book.lat,book.long);
         var cnt = 0;
+        if(userTags){
         userTags.map(tag => {
-            if(books.tags.includes(tag)){
+            if(book.tags && book.tags.includes(tag)){
                 cnt = cnt + 1 ;
             }
         });
+        }
+        
         book.distance = dist ;
         book.matched_tags = cnt ;
 
-        return ( userId!=book.userId && dist<=userDistance) ;
+        return ( userId!=book.userId  && dist<=userDistance ) ;
 
     });
+    //console.log(books);
+   // return books;
 
-}
+};
+
+module.exports = handler;

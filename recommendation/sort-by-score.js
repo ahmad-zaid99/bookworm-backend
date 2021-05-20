@@ -11,13 +11,13 @@ const handler = async (books) => {
     }
 
     // sort the books according to the final score
-    books.sort(function(a, b) {
+    [].slice.call(books).sort(function(a, b) {
         return a.finalScore - b.finalScore;
     });
 
     return books ;
 
-}
+};
 
 module.exports = handler;
 

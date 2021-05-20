@@ -11,7 +11,7 @@ const handler = async (books,count_tags) => {
 
     return books ;
 
-}
+};
 
 module.exports = handler;
 
