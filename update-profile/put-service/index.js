@@ -1,3 +1,6 @@
+const AWS = require('aws-sdk');
+var lambda = new AWS.Lambda();
+
 const {formErrorResponse,formOkResponse } = require('../utils/responseTemplate');
 
 const handler = async (event,DynamoDBClient,table) => {
@@ -17,6 +20,15 @@ const handler = async (event,DynamoDBClient,table) => {
         console.log('error',err);
         return formErrorResponse(err);
     }
+    
+    let params2 = {
+        FunctionName: "recommendation", 
+        Payload: JSON.stringify(user)
+        
+    };
+    let reslt = await lambda.invoke(params2).promise();
+    console.log(reslt);
+    
     return formOkResponse("User updated successfully");
 }
 
